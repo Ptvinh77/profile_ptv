@@ -75,9 +75,68 @@ Version      : 1.0
 		});	
 		/* END JQUERY LIGHTBOX*/	
 
-		/* START MIX JS */
-		$('.portfolio_item').mixItUp({
-		
+		/* START MIX JS - Manual Filter Implementation */
+		$(window).on('load', function() {
+			console.log('Initializing portfolio filter...');
+			
+			const filterButtons = document.querySelectorAll('.portfolio_filter .filter');
+			const mixItems = document.querySelectorAll('.portfolio_item .mix');
+			
+			console.log('Filter buttons:', filterButtons.length);
+			console.log('Mix items:', mixItems.length);
+			
+			// Function to filter items
+			function filterPortfolio(filterValue) {
+				console.log('Filtering by:', filterValue);
+				
+				mixItems.forEach(item => {
+					// Get all classes of the item
+					const itemClasses = item.classList;
+					
+					let shouldShow = false;
+					
+					if (filterValue === 'all' || filterValue === '*') {
+						// Show all
+						shouldShow = true;
+					} else {
+						// Remove leading dot if present
+						const filter = filterValue.startsWith('.') ? filterValue.slice(1) : filterValue;
+						shouldShow = itemClasses.contains(filter);
+					}
+					
+					if (shouldShow) {
+						item.style.display = '';
+						item.classList.remove('filter-hidden');
+					} else {
+						item.classList.add('filter-hidden');
+						// Use setTimeout to allow transition to complete before hiding
+						setTimeout(() => {
+							if (item.classList.contains('filter-hidden')) {
+								item.style.display = 'none';
+							}
+						}, 350);
+					}
+				});
+			}
+			
+			// Add click event to filter buttons
+			filterButtons.forEach(btn => {
+				btn.addEventListener('click', function(e) {
+					e.preventDefault();
+					
+					// Update active class
+					filterButtons.forEach(b => b.classList.remove('active'));
+					this.classList.add('active');
+					
+					// Get filter value
+					const filterValue = this.getAttribute('data-filter');
+					filterPortfolio(filterValue);
+				});
+			});
+			
+			// Initialize - show all
+			filterPortfolio('all');
+			console.log('Portfolio filter initialized');
 		});		
 			
 	}); 		
