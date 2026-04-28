@@ -353,8 +353,12 @@ color:#a47345;
 * ----------------------------------------------------------------------------------------
 */
 .home_bg{
-height:620px;
-position:relative;
+    background-image: url('./assets/img/bg1.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh;
 }
 .home_bg::before {
 	background: transparent;
